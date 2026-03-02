@@ -30,7 +30,11 @@ jobs:
           SF_DATABASE: ${{ secrets.SF_DATABASE }}
           SF_PSWD: ${{ secrets.SF_PSWD }}
         run: |
+          echo "Username value: $SF_USERNAME"
+          echo "Username length: ${#SF_USERNAME}"
+          echo "Password length: ${#SF_PSWD}"
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE/deploy \
             -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
             --create-change-history-table
+
