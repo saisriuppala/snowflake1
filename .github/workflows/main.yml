@@ -33,7 +33,7 @@ jobs:
           echo "Username value: $SF_USERNAME"
           echo "Username length: ${#SF_USERNAME}"
           echo "Password length: ${#SF_PSWD}"
-          pip install schemachange
+          pip install --upgrade --no-cache-dir schemachange
           schemachange -f deploy \
           --connections-file-path connections.toml \
           --connection-name default \
