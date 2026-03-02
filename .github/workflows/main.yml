@@ -1,0 +1,39 @@
+name: Connect to Snowflake and Run SQL
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-sql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install SnowSQL
+        run: |
+          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.27-linux_x86_64.bash
+          bash snowsql-1.2.27-linux_x86_64.bash
+
+      - name: Test Snowflake Connection
+        run: |
+          snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+                   -u ${{ secrets.SF_USERNAME }} \
+                   -p ${{ secrets.SF_PSWD }} \
+                   -w ${{ secrets.SF_WAREHOUSE }} \
+                   -d ${{ secrets.SF_DB }} \
+                   -s ${{ secrets.SF_SCHEMA }} \
+                   -q "SELECT CURRENT_VERSION();"
+
+      - name: Run Your SQL File
+        run: |
+          snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+                   -u ${{ secrets.SNOWFLAKE_USER }} \
+                   -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
+                   -w ${{ secrets.SNOWFLAKE_WAREHOUSE }} \
+                   -d ${{ secrets.SNOWFLAKE_DATABASE }} \
+                   -s ${{ secrets.SNOWFLAKE_SCHEMA }} \
+                   -f setup.sql
