@@ -1,0 +1,30 @@
+import os
+import snowflake.connector
+
+# Connect to Snowflake using GitHub Secrets
+conn = snowflake.connector.connect(
+    user=os.environ['SNOWFLAKE_USER'],
+    password=os.environ['SNOWFLAKE_PASSWORD'],
+    account=os.environ['SNOWFLAKE_ACCOUNT'],
+    warehouse=os.environ['SNOWFLAKE_WAREHOUSE'],
+    database=os.environ['SNOWFLAKE_DATABASE'],
+    schema=os.environ['SNOWFLAKE_SCHEMA']
+)
+
+cur = conn.cursor()
+
+# Read SQL from a file
+with open("setup.sql", "r") as f:
+    sql_commands = f.read()
+
+# Execute each command
+for command in sql_commands.split(";"):
+    if command.strip():
+        cur.execute(command)
+        try:
+            print(cur.fetchall())
+        except:
+            pass
+
+cur.close()
+conn.close()
