@@ -1,7 +1,7 @@
 [default]
-account = "{{ env_var('SF_ACCOUNT') }}"
+account = "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
 user = "{{ env_var('SF_USERNAME') }}"
-password = "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+password = "{{ env_var('SF_PSWD') }}"
 role = "{{ env_var('SF_ROLE') }}"
 warehouse = "{{ env_var('SF_WAREHOUSE') }}"
 database = "{{ env_var('SF_DATABASE') }}"
