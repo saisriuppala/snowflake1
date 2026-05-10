@@ -2,7 +2,7 @@ import snowflake.connector
 import os
 
 conn = snowflake.connector.connect(
-    user=os.environ["SF_USER"],
+    user=os.environ["SF_USERNAME"],
     password=os.environ["SNOWFLAKE_PASSWORD"],
     account=os.environ["SF_ACCOUNT"],
     warehouse=os.environ["SF_WAREHOUSE"],
