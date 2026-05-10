@@ -1,50 +1,37 @@
-name: snowflake-migration-demo
+name: Deploy to Snowflake
 
-# Run on push to main (deploy folder) or manual trigger
 on:
   push:
     branches:
       - main
-    paths:
-      - 'deploy/**'
-  workflow_dispatch:
 
 jobs:
-  deploy-snowflake-changes-job:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repo
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-      # Step 2: Setup Python
-      - name: Setup Python 3.8
-        uses: actions/setup-python@v2
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: '3.11'
 
-      # Step 3: Install schemachange
-      - name: Install schemachange
-        run: pip install --upgrade --no-cache-dir schemachange
-
-      # Step 4: Fix connections.toml permissions
-      - name: Fix connections.toml permissions
-        run: chmod 600 $GITHUB_WORKSPACE/connections.toml
-
-      # Step 5: Run schemachange
-      - name: Run schemachange
-        env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SF_USERNAME: ${{ secrets.SNOWFLAKE_USERNAME }}
-          SF_PSWD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      - name: Install Dependencies
         run: |
-          echo "Running schemachange..."
-          schemachange -f $GITHUB_WORKSPACE/deploy \
-            --connections-file-path $GITHUB_WORKSPACE/connections.toml \
-            --connection-name default \
-            -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
-            --create-change-history-table
+          pip install snowflake-connector-python
+          pip install snowflake-snowpark-python
+
+      - name: Execute SQL Scripts
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ secrets.SF_SCHEMA }}
+          SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
+
+        run: |
+          python scripts/deploy.py
