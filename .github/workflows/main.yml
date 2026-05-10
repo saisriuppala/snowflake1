@@ -25,13 +25,12 @@ jobs:
 
       - name: Execute SQL Scripts
         env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
+          SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
-          SNOWFLAKE_SCHEMA: ${{ secrets.SF_SCHEMA }}
-          SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
-
+          SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
+          SF_DATABASE: ${{ secrets.SF_DATABASE }}
+          SF_SCHEMA: ${{ secrets.SF_SCHEMA }}
+          SF_ROLE: ${{ secrets.SF_ROLE }}
         run: |
           python scripts/deploy.py
